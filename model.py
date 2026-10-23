@@ -45,17 +45,18 @@ def calculate_rsi(data: pd.DataFrame, period: int = 14) -> pd.Series:
     return 100 - (100 / (1 + rs))
 
 
-def load_and_prepare_data() -> pd.DataFrame:
-    """Download the configured ticker and reproduce the existing V1 feature preparation."""
+def load_and_prepare_data(ticker: str = TICKER) -> pd.DataFrame:
+    """Download the specified ticker and reproduce the existing V1 feature preparation."""
     data = yf.download(
-        TICKER,
+        ticker,
         start="2015-01-01",
         interval="1d",
         auto_adjust=False,
         progress=False,
     )
     if data.empty:
-        raise ValueError(f"No market data was returned for {TICKER}.")
+        raise ValueError(f"No market data was returned for {ticker}.")
+
 
     # yfinance can return MultiIndex columns even for a single ticker.
     if isinstance(data.columns, pd.MultiIndex):
